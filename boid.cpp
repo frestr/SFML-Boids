@@ -36,9 +36,9 @@ void Boid::updateVelocity(std::vector<Boid>& nearbyBoids)
         v3 = rule3(nearbyBoids);
 
         velocity = velocity + v1 + v2 + v3;
-        velocity += boundPosition();
-        limitVelocity();
     }
+    velocity += boundPosition();
+    limitVelocity();
     updateVelocityArrow();
     shape.setRotation(getPointingAngle() + 90);
 }
@@ -107,7 +107,7 @@ Vector2 Boid::rule3(std::vector<Boid>& nearbyBoids)
         perceivedVelocity += boid.getVelocity();
 
     perceivedVelocity /= nearbyBoids.size();
-    return (velocity - perceivedVelocity) / 100;
+    return perceivedVelocity / 200;
 }
 
 void Boid::limitVelocity()
@@ -121,14 +121,14 @@ Vector2 Boid::boundPosition()
 {
     Vector2 vel;
     if (position.getX() < minBounding.getX())
-        vel.setX(10);
+        vel.setX(20);
     else if (position.getX() > maxBounding.getX())
-        vel.setX(-10);
+        vel.setX(-20);
 
     if (position.getY() < minBounding.getY())
-        vel.setY(-10);
+        vel.setY(-20);
     else if (position.getY() > maxBounding.getY())
-        vel.setY(10);
+        vel.setY(20);
     
     return vel;
 }
