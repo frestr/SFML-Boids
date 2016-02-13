@@ -9,7 +9,7 @@ class Boid
 public:
     Boid(double xPos, double yPos, double size=1.0);
 
-    void updateVelocity(std::vector<Boid>& nearbyBoids);
+    void updateVelocity(std::vector<Boid>& nearbyBoids, bool scatter=false);
     void updatePosition(double dt);
 
     void draw(sf::RenderWindow& window, bool drawArrow = false);

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <map>
 #include "boidmanager.h"
 
 int getBoidsNum(char* argv[])
@@ -24,9 +25,7 @@ int main(int argc, char* argv[])
 
     sf::Font font;
     if (!font.loadFromFile("DroidSans.ttf"))
-    {
             return 0;
-    }
 
     sf::Text fpsCounter;
     fpsCounter.setFont(font);
@@ -36,7 +35,8 @@ int main(int argc, char* argv[])
 
     BoidManager boids(getBoidsNum(argv), window.getSize());
 
-    bool drawArrows = false;
+    std::map<char, bool> keyStates = {{'a', false}, {'s', false}};
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -44,11 +44,21 @@ int main(int argc, char* argv[])
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-            if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::A))
-                drawArrows = ! drawArrows;
+            if ((event.type == sf::Event::KeyReleased))
+                switch (event.key.code)
+                {
+                    case sf::Keyboard::A:
+                        keyStates.at('a') = ! keyStates.at('a');
+                        break;
+                    case sf::Keyboard::S:
+                        keyStates.at('s') = ! keyStates.at('s');
+                        break;
+                    default:
+                        break;
+                }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                window.close();
+        /* if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) */
+        /*         window.close(); */
         double dt = dtClock.restart().asSeconds();
         if (fpsTimer.getElapsedTime().asMilliseconds() > 100)
         {
@@ -57,10 +67,10 @@ int main(int argc, char* argv[])
                 fpsCounter.setString("fps: " + std::to_string(fps));
         }
 
-        boids.updatePositions();
+        boids.updatePositions(keyStates.at('s'));
 
         window.clear(sf::Color(200, 200, 200));
-        boids.drawBoids(window, drawArrows);
+        boids.drawBoids(window, keyStates.at('a'));
         window.draw(fpsCounter);
         window.display();
     }

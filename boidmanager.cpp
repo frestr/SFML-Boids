@@ -18,7 +18,7 @@ BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
     dtClock.restart();
 }
 
-void BoidManager::updatePositions()
+void BoidManager::updatePositions(bool scatter)
 {
     for (Boid& boid : boids)
     {
@@ -29,7 +29,7 @@ void BoidManager::updatePositions()
                     && compBoid.getPosition() != boid.getPosition())
                 nearbyBoids->push_back(compBoid);
 
-        boid.updateVelocity(*nearbyBoids);
+        boid.updateVelocity(*nearbyBoids, scatter);
     }
 
     // All boids should update their velocities before they update their

@@ -25,17 +25,26 @@ Boid::Boid(double xPos, double yPos, double size)
     updateVelocityArrow();
 }
 
-void Boid::updateVelocity(std::vector<Boid>& nearbyBoids)
+void Boid::updateVelocity(std::vector<Boid>& nearbyBoids, bool scatter)
 {
     if (nearbyBoids.size() > 0)
     {
-        Vector2 v1, v2, v3;
+        // These are coefficients that has shown to work out well
+        double c1 = 1.0/30.0;
+        double c2 = 1.0/2.0;
+        double c3 = 1.0/200.0;
 
-        v1 = rule1(nearbyBoids);
-        v2 = rule2(nearbyBoids);
-        v3 = rule3(nearbyBoids);
+        if (scatter)
+        {
+            c1 *= -2; // Go away from center (instead of towards)
+            c3 /= 2;  // Do not try to align velocity as eagerly
+        }
 
-        velocity = velocity + v1 + v2 + v3;
+        Vector2 towardsCenter      = rule1(nearbyBoids) * c1;
+        Vector2 repellingForce     = rule2(nearbyBoids) * c2;
+        Vector2 perceivedVelocity  = rule3(nearbyBoids) * c3;
+
+        velocity = velocity + towardsCenter + repellingForce + perceivedVelocity;
     }
     velocity += boundPosition();
     limitVelocity();
@@ -86,7 +95,7 @@ Vector2 Boid::rule1(std::vector<Boid>& nearbyBoids)
         centerOfMass += boid.getPosition();
 
     centerOfMass /= nearbyBoids.size();
-    return (centerOfMass - position) / 30;
+    return centerOfMass - position;
 }
 
 /* Rule 2: Try to keep a distance from other boids */
@@ -97,7 +106,7 @@ Vector2 Boid::rule2(std::vector<Boid>& nearbyBoids)
         if ((boid.getPosition() - position).length() < 40)
             repellingForce -= boid.getPosition() - position;
 
-    return repellingForce / 2;
+    return repellingForce;
 }
 
 /* Rule 3: Try to match the velocity of nearby boids */
@@ -108,7 +117,7 @@ Vector2 Boid::rule3(std::vector<Boid>& nearbyBoids)
         perceivedVelocity += boid.getVelocity();
 
     perceivedVelocity /= nearbyBoids.size();
-    return perceivedVelocity / 200;
+    return perceivedVelocity;
 }
 
 void Boid::limitVelocity()
