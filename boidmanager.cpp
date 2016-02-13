@@ -1,4 +1,5 @@
 #include <random>
+#include <memory>
 #include "boidmanager.h"
 
 BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
@@ -19,13 +20,14 @@ BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
 
 void BoidManager::updatePositions()
 {
-    /* double dt = clock.restart().asSeconds(); */
     for (Boid& boid : boids)
     {
-        // This is a temporary solution
-        // Also, remember to not include the boid itself
-        // (in the non-temporary solution)
-        std::vector<Boid>* nearbyBoids = &boids;
+        // This is not a very efficient way to check for nearby boids
+        std::unique_ptr<std::vector<Boid>> nearbyBoids(new std::vector<Boid>);
+        for (Boid& compBoid : boids)
+            if ((boid.getPosition() - compBoid.getPosition()).length() < 300
+                    && compBoid.getPosition() != boid.getPosition())
+                nearbyBoids->push_back(compBoid);
 
         boid.updateVelocity(*nearbyBoids);
     }

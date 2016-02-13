@@ -27,16 +27,18 @@ Boid::Boid(double xPos, double yPos, double size)
 
 void Boid::updateVelocity(std::vector<Boid>& nearbyBoids)
 {
-    Vector2 v1, v2, v3;
+    if (nearbyBoids.size() > 0)
+    {
+        Vector2 v1, v2, v3;
 
-    v1 = rule1(nearbyBoids);
-    v2 = rule2(nearbyBoids);
-    v3 = rule3(nearbyBoids);
+        v1 = rule1(nearbyBoids);
+        v2 = rule2(nearbyBoids);
+        v3 = rule3(nearbyBoids);
 
-    velocity = velocity + v1 + v2 + v3;
-    velocity += boundPosition();
-    limitVelocity();
-
+        velocity = velocity + v1 + v2 + v3;
+        velocity += boundPosition();
+        limitVelocity();
+    }
     updateVelocityArrow();
     shape.setRotation(getPointingAngle() + 90);
 }
@@ -83,7 +85,7 @@ Vector2 Boid::rule1(std::vector<Boid>& nearbyBoids)
         centerOfMass += boid.getPosition();
 
     centerOfMass /= nearbyBoids.size();
-    return (centerOfMass - position) / 100;
+    return (centerOfMass - position) / 30;
 }
 
 /* Rule 2: Try to keep a distance from other boids */
