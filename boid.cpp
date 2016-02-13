@@ -49,9 +49,10 @@ void Boid::updatePosition(double dt)
     shape.setPosition(position.getX(), position.getY());
 }
 
-void Boid::draw(sf::RenderWindow& window)
+void Boid::draw(sf::RenderWindow& window, bool drawArrow)
 {
-    window.draw(velocityArrow);
+    if (drawArrow)
+        window.draw(velocityArrow);
     window.draw(shape);
 }
 
@@ -96,7 +97,7 @@ Vector2 Boid::rule2(std::vector<Boid>& nearbyBoids)
         if ((boid.getPosition() - position).length() < 40)
             repellingForce -= boid.getPosition() - position;
 
-    return repellingForce;
+    return repellingForce / 2;
 }
 
 /* Rule 3: Try to match the velocity of nearby boids */
@@ -112,7 +113,7 @@ Vector2 Boid::rule3(std::vector<Boid>& nearbyBoids)
 
 void Boid::limitVelocity()
 {
-    int limit = 400;
+    int limit = 500;
     if (velocity.length() > limit)
         velocity = (velocity / velocity.length()) * limit;
 }

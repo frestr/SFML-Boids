@@ -10,7 +10,7 @@ public:
     BoidManager(int boidsAmount, sf::Vector2u windowSize);
 
     void updatePositions();
-    void drawBoids(sf::RenderWindow& window);
+    void drawBoids(sf::RenderWindow& window, bool drawArrows = false);
 
 private:
     std::vector<Boid> boids;

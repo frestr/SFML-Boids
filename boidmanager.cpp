@@ -39,8 +39,8 @@ void BoidManager::updatePositions()
         boid.updatePosition(dt);
 }
 
-void BoidManager::drawBoids(sf::RenderWindow& window)
+void BoidManager::drawBoids(sf::RenderWindow& window, bool drawArrows)
 {
     for (Boid& boid : boids)
-        boid.draw(window);
+        boid.draw(window, drawArrows);
 }

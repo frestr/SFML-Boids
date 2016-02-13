@@ -12,7 +12,7 @@ public:
     void updateVelocity(std::vector<Boid>& nearbyBoids);
     void updatePosition(double dt);
 
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window, bool drawArrow = false);
     Vector2 getPosition();
     Vector2 getVelocity();
     void setBoundingBox(Vector2 min, Vector2 max);
