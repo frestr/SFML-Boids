@@ -13,7 +13,7 @@ BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
         boids.push_back(Boid(disX(gen), disY(gen)));
 
     for (Boid& boid : boids)
-        boid.setBoundingBox(Vector2(0, 0), Vector2(windowSize.x, windowSize.y));
+        boid.setBoundingBox(Vector2(100, 50), Vector2(windowSize.x-100, windowSize.y-50));
 
     dtClock.restart();
 }
