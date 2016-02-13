@@ -1,2 +1,2 @@
 # SFML-Boids
-Implementation of Craig Reynold's Boids, using SFML2 with C++11.
+Implementation of Craig Reynold's Boids in C++11 with SFML2.
