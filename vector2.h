@@ -18,6 +18,9 @@ public:
     Vector2 operator / (double rightNum);
     Vector2 operator /= (double rightNum);
 
+    bool operator == (Vector2 rightVec);
+    bool operator != (Vector2 rightVec);
+
     double dot(Vector2 rightVec);
     double length();
     void normalize();

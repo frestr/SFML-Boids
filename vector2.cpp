@@ -52,6 +52,16 @@ Vector2 Vector2::operator /= (double rightNum)
     return *this;
 }
 
+bool Vector2::operator == (Vector2 rightVec)
+{
+    return x == rightVec.x && y == rightVec.y;
+}
+
+bool Vector2::operator != (Vector2 rightVec)
+{
+    return x != rightVec.x || y != rightVec.y;
+}
+
 double Vector2::dot(Vector2 rightVec)
 {
     return x*rightVec.x + y*rightVec.y;
