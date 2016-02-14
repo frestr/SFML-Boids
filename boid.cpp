@@ -9,9 +9,9 @@ Boid::Boid(double xPos, double yPos, double size)
 
     shape.setPointCount(3);
     shape.setPoint(0, sf::Vector2f(0, 0));
-    shape.setPoint(1, sf::Vector2f(-10 * size, 30 * size));
-    shape.setPoint(2, sf::Vector2f(10 * size, 30 * size));
-    shape.setOrigin(0, 15 * size);
+    shape.setPoint(1, sf::Vector2f(-7 * size, 20 * size));
+    shape.setPoint(2, sf::Vector2f(7 * size, 20 * size));
+    shape.setOrigin(0, 10 * size);
 
     shape.setFillColor(sf::Color(0, 255, 0));
     shape.setOutlineThickness(2);
@@ -103,7 +103,7 @@ Vector2 Boid::rule2(std::vector<Boid>& nearbyBoids)
 {
     Vector2 repellingForce;
     for (Boid& boid : nearbyBoids)
-        if ((boid.getPosition() - position).length() < 40)
+        if ((boid.getPosition() - position).length() < 30)
             repellingForce -= boid.getPosition() - position;
 
     return repellingForce;
@@ -147,7 +147,7 @@ void Boid::updateVelocityArrow()
 {
     velocityArrow.setPosition(shape.getPosition());
 
-    double arrowLength = velocity.length() / 2;
+    double arrowLength = velocity.length() / 4;
     velocityArrow.setSize(sf::Vector2f(arrowLength, 2));
 
     velocityArrow.setRotation(getPointingAngle());
