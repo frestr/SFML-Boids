@@ -4,24 +4,28 @@
 
 BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
 {
+    this->windowSize = windowSize;
+
     std::random_device rd;
     std::default_random_engine gen(rd());
     std::uniform_int_distribution<> disX(0, windowSize.x);
     std::uniform_int_distribution<> disY(0, windowSize.y);
 
     for (int i = 0; i < boidsAmount; ++i)
-        boids.push_back(Boid(disX(gen), disY(gen)));
-
-    for (Boid& boid : boids)
-        boid.setBoundingBox(Vector2(100, 50), Vector2(windowSize.x-100, windowSize.y-50));
+        addBoid(disX(gen), disY(gen));
 
     dtClock.restart();
 }
 
 void BoidManager::updatePositions(InputHandler& input)
 {
-    bool scatter = input.isKeyActive(sf::Keyboard::S);
+    if (input.mouseClicked())
+    {
+        Vector2 clickPos = input.getClickPos();
+        addBoid(clickPos.getX(), clickPos.getY());
+    }
 
+    bool scatter = input.isKeyActive(sf::Keyboard::S);
     for (Boid& boid : boids)
     {
         nearbyBoids.clear();
@@ -44,4 +48,11 @@ void BoidManager::drawBoids(sf::RenderWindow& window, bool drawArrows)
 {
     for (Boid& boid : boids)
         boid.draw(window, drawArrows);
+}
+
+void BoidManager::addBoid(int xPos, int yPos)
+{
+    Boid boid(xPos, yPos);
+    boid.setBoundingBox(Vector2(100, 50), Vector2(windowSize.x-100, windowSize.y-50));
+    boids.push_back(boid);
 }

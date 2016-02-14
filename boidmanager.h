@@ -14,8 +14,10 @@ public:
     void drawBoids(sf::RenderWindow& window, bool drawArrows = false);
 
 private:
+    void addBoid(int xPos, int yPos);
+
     std::vector<Boid> boids;
     Boid::boidRefVec nearbyBoids;
     sf::Clock dtClock;
-    std::map<char, bool> keys;
+    sf::Vector2u windowSize;
 };

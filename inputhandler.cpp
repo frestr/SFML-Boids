@@ -1,25 +1,35 @@
 #include "inputhandler.h"
 #include <algorithm>
+#include <iostream>
 
-InputHandler::InputHandler() : closeWindow(false)
+InputHandler::InputHandler() : closeWindow(false), clickPos(Vector2(-1, -1))
 {
 
 }
 
 void InputHandler::readInput(sf::RenderWindow& window)
 {
+    clickPos = Vector2(-1, -1);
     sf::Event event;
     while (window.pollEvent(event))
     {
-        if (event.type == sf::Event::Closed)
-            closeWindow = true;
-        if ((event.type == sf::Event::KeyReleased))
+        switch (event.type)
         {
-            if (isKeyActive(event.key.code))
-                activeKeys.erase(std::remove(activeKeys.begin(), activeKeys.end(), event.key.code), 
-                        activeKeys.end());
-            else
-                activeKeys.push_back(event.key.code);
+            case sf::Event::Closed:
+                closeWindow = true;
+                break;
+            case sf::Event::KeyPressed:
+                if (isKeyActive(event.key.code))
+                    activeKeys.erase(std::remove(activeKeys.begin(), activeKeys.end(), event.key.code), 
+                            activeKeys.end());
+                else
+                    activeKeys.push_back(event.key.code);
+                break;
+            case sf::Event::MouseButtonPressed:
+                clickPos = Vector2(event.mouseButton.x, event.mouseButton.y);
+                break;
+            default:
+                break;
         }
     }
 }
@@ -30,7 +40,18 @@ bool InputHandler::isKeyActive(sf::Keyboard::Key key)
     return std::find(activeKeys.begin(), activeKeys.end(), key) != activeKeys.end();
 }
 
+
 bool InputHandler::shouldCloseWindow()
 {
     return closeWindow;
+}
+
+bool InputHandler::mouseClicked()
+{
+    return clickPos.getX() != -1 && clickPos.getY() != -1;
+}
+
+Vector2 InputHandler::getClickPos()
+{
+    return clickPos;
 }
