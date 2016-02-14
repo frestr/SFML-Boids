@@ -2,7 +2,7 @@ CPPFLAGS=-std=c++11 -c
 LDFLAGS=-g
 LDLIBS=-lsfml-graphics -lsfml-window -lsfml-system
 
-SRCS=main.cpp vector2.cpp boid.cpp boidmanager.cpp
+SRCS=main.cpp vector2.cpp boid.cpp boidmanager.cpp inputhandler.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: sfml-boids

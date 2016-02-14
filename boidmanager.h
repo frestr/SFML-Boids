@@ -3,13 +3,14 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "boid.h"
+#include "inputhandler.h"
 
 class BoidManager
 {
 public:
     BoidManager(int boidsAmount, sf::Vector2u windowSize);
 
-    void updatePositions(bool scatter=false);
+    void updatePositions(InputHandler& input);
     void drawBoids(sf::RenderWindow& window, bool drawArrows = false);
 
 private:

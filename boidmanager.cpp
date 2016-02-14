@@ -18,8 +18,10 @@ BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
     dtClock.restart();
 }
 
-void BoidManager::updatePositions(bool scatter)
+void BoidManager::updatePositions(InputHandler& input)
 {
+    bool scatter = input.isKeyActive(sf::Keyboard::S);
+
     for (Boid& boid : boids)
     {
         nearbyBoids.clear();
