@@ -162,8 +162,6 @@ double Boid::getPointingAngle()
     double angle = atan2(normVel.getY(), normVel.getX());
     angle *= 180 / 3.14159265;  // Convert to degrees
     angle *= -1;  // Flip
-    if (angle >= 180 && angle < 360)
-        angle += 360;
 
     return angle;
 }
