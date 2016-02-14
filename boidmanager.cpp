@@ -22,14 +22,13 @@ void BoidManager::updatePositions(bool scatter)
 {
     for (Boid& boid : boids)
     {
-        // This is not a very efficient way to check for nearby boids
-        std::unique_ptr<std::vector<Boid>> nearbyBoids(new std::vector<Boid>);
+        nearbyBoids.clear();
         for (Boid& compBoid : boids)
-            if ((boid.getPosition() - compBoid.getPosition()).length() < 300
+            if ((boid.getPosition() - compBoid.getPosition()).length() < 250
                     && compBoid.getPosition() != boid.getPosition())
-                nearbyBoids->push_back(compBoid);
+                nearbyBoids.push_back(compBoid);
 
-        boid.updateVelocity(*nearbyBoids, scatter);
+        boid.updateVelocity(nearbyBoids, scatter);
     }
 
     // All boids should update their velocities before they update their

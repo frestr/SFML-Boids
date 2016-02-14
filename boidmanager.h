@@ -14,6 +14,7 @@ public:
 
 private:
     std::vector<Boid> boids;
+    std::vector<std::reference_wrapper<Boid>> nearbyBoids;
     sf::Clock dtClock;
     std::map<char, bool> keys;
 };

@@ -25,7 +25,7 @@ Boid::Boid(double xPos, double yPos, double size)
     updateVelocityArrow();
 }
 
-void Boid::updateVelocity(std::vector<Boid>& nearbyBoids, bool scatter)
+void Boid::updateVelocity(std::vector<std::reference_wrapper<Boid>> nearbyBoids, bool scatter)
 {
     if (nearbyBoids.size() > 0)
     {
@@ -88,7 +88,7 @@ void Boid::setBoundingBox(Vector2 min, Vector2 max)
 }
 
 /* Rule 1: Try to fly towards the center of mass of neighbouring boids */
-Vector2 Boid::rule1(std::vector<Boid>& nearbyBoids)
+Vector2 Boid::rule1(std::vector<std::reference_wrapper<Boid>> nearbyBoids)
 {
     Vector2 centerOfMass;
     for (Boid& boid : nearbyBoids)
@@ -99,7 +99,7 @@ Vector2 Boid::rule1(std::vector<Boid>& nearbyBoids)
 }
 
 /* Rule 2: Try to keep a distance from other boids */
-Vector2 Boid::rule2(std::vector<Boid>& nearbyBoids)
+Vector2 Boid::rule2(std::vector<std::reference_wrapper<Boid>> nearbyBoids)
 {
     Vector2 repellingForce;
     for (Boid& boid : nearbyBoids)
@@ -110,7 +110,7 @@ Vector2 Boid::rule2(std::vector<Boid>& nearbyBoids)
 }
 
 /* Rule 3: Try to match the velocity of nearby boids */
-Vector2 Boid::rule3(std::vector<Boid>& nearbyBoids)
+Vector2 Boid::rule3(std::vector<std::reference_wrapper<Boid>> nearbyBoids)
 {
     Vector2 perceivedVelocity;
     for (Boid& boid : nearbyBoids)
