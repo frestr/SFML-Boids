@@ -7,9 +7,12 @@
 class Boid
 {
 public:
+    typedef std::reference_wrapper<Boid> boidRef;
+    typedef std::vector<boidRef> boidRefVec;
+
     Boid(double xPos, double yPos, double size=1.0);
 
-    void updateVelocity(std::vector<std::reference_wrapper<Boid>> nearbyBoids, bool scatter=false);
+    void updateVelocity(boidRefVec nearbyBoids, bool scatter=false);
     void updatePosition(double dt);
 
     void draw(sf::RenderWindow& window, bool drawArrow = false);
@@ -18,9 +21,9 @@ public:
     void setBoundingBox(Vector2 min, Vector2 max);
 
 private:
-    Vector2 rule1(std::vector<std::reference_wrapper<Boid>> nearbyBoids);
-    Vector2 rule2(std::vector<std::reference_wrapper<Boid>> nearbyBoids);
-    Vector2 rule3(std::vector<std::reference_wrapper<Boid>> nearbyBoids);
+    Vector2 rule1(boidRefVec nearbyBoids);
+    Vector2 rule2(boidRefVec nearbyBoids);
+    Vector2 rule3(boidRefVec nearbyBoids);
     
     void limitVelocity();
     Vector2 boundPosition();
