@@ -14,7 +14,7 @@ public:
     void drawBoids(sf::RenderWindow& window, bool drawArrows = false);
 
 private:
-    void addBoid(int xPos, int yPos);
+    void addBoid(int xPos, int yPos, bool predator=false);
 
     std::vector<Boid> boids;
     Boid::boidRefVec nearbyBoids;

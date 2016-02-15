@@ -2,10 +2,9 @@
 #include <cmath>
 #include <iostream>
 
-Boid::Boid(double xPos, double yPos, double size)
+Boid::Boid(double xPos, double yPos, bool isPredator) : predator(isPredator)
 {
-    if (size <= 0)
-        size = 1;
+    int size = 1;
 
     shape.setPointCount(3);
     shape.setPoint(0, sf::Vector2f(0, 0));
@@ -13,9 +12,11 @@ Boid::Boid(double xPos, double yPos, double size)
     shape.setPoint(2, sf::Vector2f(7 * size, 20 * size));
     shape.setOrigin(0, 10 * size);
 
-    shape.setFillColor(sf::Color(0, 255, 0));
+    sf::Color fillColor    = predator ? sf::Color(255, 0, 0) : sf::Color(0, 255,0 );
+    sf::Color outlineColor = predator ? sf::Color(150, 0, 0) : sf::Color(0, 150, 0);
+    shape.setFillColor(fillColor);
+    shape.setOutlineColor(outlineColor);
     shape.setOutlineThickness(2);
-    shape.setOutlineColor(sf::Color(0, 150, 0));
 
     velocityArrow.setFillColor(sf::Color(200, 0, 0));
 
@@ -30,23 +31,37 @@ void Boid::updateVelocity(boidRefVec nearbyBoids, bool scatter)
     if (nearbyBoids.size() > 0)
     {
         // These are coefficients that has shown to work out well
-        double c1 = 1.0/30.0;
+        double c1 = 1.0/20.0;
         double c2 = 1.0/2.0;
         double c3 = 1.0/200.0;
+        double c4 = 1.0/5.0;
 
         if (scatter)
         {
             c1 *= -2; // Go away from center (instead of towards)
             c3 /= 2;  // Do not try to align velocity as eagerly
         }
+        if (predator)
+            c1 *= 3;
 
         Vector2 towardsCenter      = rule1(nearbyBoids) * c1;
         Vector2 repellingForce     = rule2(nearbyBoids) * c2;
         Vector2 perceivedVelocity  = rule3(nearbyBoids) * c3;
+        Vector2 fleeForce          = fleeFromPredators(nearbyBoids) * c4;
 
-        velocity = velocity + towardsCenter + repellingForce + perceivedVelocity;
+        velocity += towardsCenter;
+        if (! predator)
+        {
+            velocity += repellingForce;
+            velocity += perceivedVelocity;
+            velocity += fleeForce;
+        }
     }
-    velocity += boundPosition();
+    double c5 = 1.0;
+    if (predator)
+        c5 = 2.0;
+    velocity += boundPosition() * c5;
+
     limitVelocity();
     updateVelocityArrow();
     shape.setRotation(getPointingAngle() + 90);
@@ -87,12 +102,18 @@ void Boid::setBoundingBox(Vector2 min, Vector2 max)
     maxBounding = max;
 }
 
+bool Boid::isPredator()
+{
+    return predator;
+}
+
 /* Rule 1: Try to fly towards the center of mass of neighbouring boids */
 Vector2 Boid::rule1(boidRefVec nearbyBoids)
 {
     Vector2 centerOfMass;
     for (Boid& boid : nearbyBoids)
-        centerOfMass += boid.getPosition();
+        if (! boid.isPredator())
+            centerOfMass += boid.getPosition();
 
     centerOfMass /= nearbyBoids.size();
     return centerOfMass - position;
@@ -114,10 +135,27 @@ Vector2 Boid::rule3(boidRefVec nearbyBoids)
 {
     Vector2 perceivedVelocity;
     for (Boid& boid : nearbyBoids)
-        perceivedVelocity += boid.getVelocity();
+        if (! boid.isPredator())
+            perceivedVelocity += boid.getVelocity();
 
     perceivedVelocity /= nearbyBoids.size();
     return perceivedVelocity;
+}
+
+Vector2 Boid::fleeFromPredators(boidRefVec nearbyBoids)
+{
+    Vector2 fleeVelocity;
+    int predators = 0;
+    for (Boid& boid : nearbyBoids)
+        if (boid.isPredator())
+        {
+            fleeVelocity -= (boid.getPosition() - position);
+            ++predators;
+        }
+    if (predators == 0)
+        return Vector2(0, 0);
+    else
+        return fleeVelocity / predators;
 }
 
 void Boid::limitVelocity()

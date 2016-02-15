@@ -2,10 +2,9 @@
 #include <algorithm>
 #include <iostream>
 
-InputHandler::InputHandler() : closeWindow(false), clickPos(Vector2(-1, -1))
-{
-
-}
+InputHandler::InputHandler() : closeWindow(false),
+                               clickPos(Vector2(-1, -1)),
+                               leftClick(false) {}
 
 void InputHandler::readInput(sf::RenderWindow& window)
 {
@@ -27,6 +26,7 @@ void InputHandler::readInput(sf::RenderWindow& window)
                 break;
             case sf::Event::MouseButtonPressed:
                 clickPos = Vector2(event.mouseButton.x, event.mouseButton.y);
+                leftClick = event.mouseButton.button == sf::Mouse::Left;
                 break;
             default:
                 break;
@@ -46,9 +46,13 @@ bool InputHandler::shouldCloseWindow()
     return closeWindow;
 }
 
-bool InputHandler::mouseClicked()
+bool InputHandler::mouseClicked(char button)
 {
-    return clickPos.getX() != -1 && clickPos.getY() != -1;
+    bool correctButton = true;
+    if (button == 'l' || button == 'r')
+        correctButton = (button == 'l' ? leftClick : !leftClick);
+
+    return clickPos.getX() != -1 && clickPos.getY() != -1 && correctButton;
 }
 
 Vector2 InputHandler::getClickPos()
