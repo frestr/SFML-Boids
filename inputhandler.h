@@ -14,10 +14,12 @@ public:
     bool shouldCloseWindow();
     bool mouseClicked(char button=' ');
     Vector2 getClickPos();
+    int mouseScrolled();
 
 private:
     std::vector<sf::Keyboard::Key> activeKeys; // i.e. toggled keys
     bool closeWindow;
     Vector2 clickPos;
     bool leftClick;
+    int scrollDelta;
 };

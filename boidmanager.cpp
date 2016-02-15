@@ -2,14 +2,14 @@
 #include <memory>
 #include "boidmanager.h"
 
-BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
+BoidManager::BoidManager(int boidsAmount, sf::View windowView)
 {
-    this->windowSize = windowSize;
+    view = windowView;
 
     std::random_device rd;
     std::default_random_engine gen(rd());
-    std::uniform_int_distribution<> disX(0, windowSize.x);
-    std::uniform_int_distribution<> disY(0, windowSize.y);
+    std::uniform_int_distribution<> disX(0, view.getSize().x);
+    std::uniform_int_distribution<> disY(0, view.getSize().y);
 
     for (int i = 0; i < boidsAmount; ++i)
         addBoid(disX(gen), disY(gen));
@@ -17,8 +17,15 @@ BoidManager::BoidManager(int boidsAmount, sf::Vector2u windowSize)
     dtClock.restart();
 }
 
-void BoidManager::updatePositions(InputHandler& input)
+void BoidManager::updatePositions(InputHandler& input, sf::View windowView)
 {
+    if (windowView.getSize() != view.getSize())
+    {
+        view = windowView;
+        for (Boid& boid : boids)
+            updateBoundingBox(boid);
+    }
+
     if (input.mouseClicked())
     {
         bool predator = input.mouseClicked('r');
@@ -56,6 +63,14 @@ void BoidManager::drawBoids(sf::RenderWindow& window, bool drawArrows)
 void BoidManager::addBoid(int xPos, int yPos, bool predator)
 {
     Boid boid(xPos, yPos, predator);
-    boid.setBoundingBox(Vector2(100, 50), Vector2(windowSize.x-100, windowSize.y-50));
+    updateBoundingBox(boid);
     boids.push_back(boid);
+}
+
+void BoidManager::updateBoundingBox(Boid& boid)
+{
+    sf::Vector2f viewCenter = view.getCenter();
+    sf::Vector2f viewSize = view.getSize();
+    boid.setBoundingBox(Vector2(viewCenter.x - viewSize.x/2 + 100, viewCenter.y - viewSize.y/2 + 50), 
+                        Vector2(viewCenter.x + viewSize.x/2 + 100, viewCenter.y + viewSize.y/2 - 50));
 }

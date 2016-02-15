@@ -9,7 +9,9 @@ InputHandler::InputHandler() : closeWindow(false),
 void InputHandler::readInput(sf::RenderWindow& window)
 {
     clickPos = Vector2(-1, -1);
+    scrollDelta = 0;
     sf::Event event;
+    sf::Vector2f worldPos;
     while (window.pollEvent(event))
     {
         switch (event.type)
@@ -25,8 +27,12 @@ void InputHandler::readInput(sf::RenderWindow& window)
                     activeKeys.push_back(event.key.code);
                 break;
             case sf::Event::MouseButtonPressed:
-                clickPos = Vector2(event.mouseButton.x, event.mouseButton.y);
+                worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                clickPos = Vector2(worldPos.x, worldPos.y);
                 leftClick = event.mouseButton.button == sf::Mouse::Left;
+                break;
+            case sf::Event::MouseWheelScrolled:
+                scrollDelta = event.mouseWheelScroll.delta;
                 break;
             default:
                 break;
@@ -58,4 +64,9 @@ bool InputHandler::mouseClicked(char button)
 Vector2 InputHandler::getClickPos()
 {
     return clickPos;
+}
+
+int InputHandler::mouseScrolled()
+{
+    return scrollDelta;
 }
