@@ -1,6 +1,7 @@
 #include "inputhandler.h"
 #include <algorithm>
 #include <iostream>
+#include <SFML/Config.hpp>
 
 InputHandler::InputHandler() : closeWindow(false),
                                clickPos(Vector2(-1, -1)),
@@ -32,7 +33,11 @@ void InputHandler::readInput(sf::RenderWindow& window)
                 leftClick = event.mouseButton.button == sf::Mouse::Left;
                 break;
             case sf::Event::MouseWheelScrolled:
+#if SFML_VERSION_MINOR<3
+                scrollDelta = event.mouseWheel.delta;
+#else
                 scrollDelta = event.mouseWheelScroll.delta;
+#endif
                 break;
             default:
                 break;
