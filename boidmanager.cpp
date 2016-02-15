@@ -72,5 +72,5 @@ void BoidManager::updateBoundingBox(Boid& boid)
     sf::Vector2f viewCenter = view.getCenter();
     sf::Vector2f viewSize = view.getSize();
     boid.setBoundingBox(Vector2(viewCenter.x - viewSize.x/2 + 100, viewCenter.y - viewSize.y/2 + 50), 
-                        Vector2(viewCenter.x + viewSize.x/2 + 100, viewCenter.y + viewSize.y/2 - 50));
+                        Vector2(viewCenter.x + viewSize.x/2 - 100, viewCenter.y + viewSize.y/2 - 50));
 }
