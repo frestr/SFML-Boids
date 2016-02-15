@@ -33,7 +33,7 @@ void InputHandler::readInput(sf::RenderWindow& window)
                 leftClick = event.mouseButton.button == sf::Mouse::Left;
                 break;
 #if SFML_VERSION_MINOR<3
-            case sf::Event:MouseWheelMoved:
+            case sf::Event::MouseWheelMoved:
                 scrollDelta = event.mouseWheel.delta;
                 break;
 #else
