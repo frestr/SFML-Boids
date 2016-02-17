@@ -4,6 +4,12 @@
 
 BoidManager::BoidManager(int boidsAmount, sf::View windowView)
 {
+    threadNum = std::thread::hardware_concurrency();
+    if (threadNum == 0)
+        threadNum = 1;
+
+    threads = std::vector<std::thread>(threadNum);
+
     view = windowView;
 
     std::random_device rd;
@@ -15,6 +21,21 @@ BoidManager::BoidManager(int boidsAmount, sf::View windowView)
         addBoid(disX(gen), disY(gen));
 
     dtClock.restart();
+}
+
+BoidManager::~BoidManager()
+{
+    try
+    {
+        // Make sure all the threads are joined
+        for (int i = 0; i < threadNum; ++i)
+            threads.at(i).join();
+    }
+    catch (const std::exception& ex)
+    {
+        // I'm a naughty boy
+        return;
+    }
 }
 
 void BoidManager::updatePositions(InputHandler& input, sf::View windowView)
@@ -34,24 +55,38 @@ void BoidManager::updatePositions(InputHandler& input, sf::View windowView)
     }
 
     bool scatter = input.isKeyActive(sf::Keyboard::S);
-    int visionRadius = 250;
-    for (Boid& boid : boids)
-    {
-        /* visionRadius = boid.isPredator() ? 500 : 250; */
-        nearbyBoids.clear();
-        for (Boid& compBoid : boids)
-            if ((boid.getPosition() - compBoid.getPosition()).length() < visionRadius
-                    && compBoid.getPosition() != boid.getPosition())
-                nearbyBoids.push_back(compBoid);
 
-        boid.updateVelocity(nearbyBoids, scatter);
-    }
+    int batchSize = boids.size() / threadNum;
+    for (int i = 0; i < threadNum; ++i)
+        threads.at(i) = std::thread(&BoidManager::batchUpdatePositions, this, i, batchSize, scatter);
+
+    for (int i = 0; i < threadNum; ++i)
+        threads.at(i).join();
 
     // All boids should update their velocities before they update their
     // positions. This way, no boids get a "head start".
     double dt = dtClock.restart().asSeconds();
     for (Boid& boid : boids)
         boid.updatePosition(dt);
+}
+
+void BoidManager::batchUpdatePositions(int offset, int batchSize, bool scatter)
+{
+    int visionRadius = 250;
+    Boid::boidRefVec nearbyBoids;
+
+    auto itEnd = ((offset != threadNum - 1) ? (boids.begin() + offset * batchSize + batchSize) : boids.end());
+    for (auto it = boids.begin() + offset * batchSize; it != itEnd; ++it) 
+    {
+        /* visionRadius = boid.isPredator() ? 500 : 250; */
+        nearbyBoids.clear();
+        for (Boid& compBoid : boids)
+            if (((*it).getPosition() - compBoid.getPosition()).length() < visionRadius
+                    && compBoid.getPosition() != (*it).getPosition())
+                nearbyBoids.push_back(compBoid);
+
+        (*it).updateVelocity(nearbyBoids, scatter);
+    }
 }
 
 void BoidManager::drawBoids(sf::RenderWindow& window, bool drawArrows)

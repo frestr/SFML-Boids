@@ -43,7 +43,10 @@ int main(int argc, char* argv[])
     {
         input.readInput(window);
         if (input.shouldCloseWindow())
+        {
             window.close();
+            break;
+        }
 
         int scrollDelta = input.mouseScrolled();
         if (scrollDelta > 0 && view.getSize().y > 200)

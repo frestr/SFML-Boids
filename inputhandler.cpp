@@ -1,6 +1,5 @@
 #include "inputhandler.h"
 #include <algorithm>
-#include <iostream>
 #include <SFML/Config.hpp>
 
 InputHandler::InputHandler() : closeWindow(false),
