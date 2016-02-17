@@ -14,7 +14,7 @@ int getBoidsNum(char* argv[])
     }
     catch (const std::exception& ex)
     {
-        boidsNum = 20;
+        boidsNum = 50;
     }
     return boidsNum;
 }
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     sf::Text fpsCounter;
     fpsCounter.setFont(font);
-    fpsCounter.setPosition(0, 10);
+    fpsCounter.setPosition(10, 5);
     sf::Clock dtClock;
     sf::Clock fpsTimer;
 

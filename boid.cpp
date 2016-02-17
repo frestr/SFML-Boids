@@ -31,8 +31,8 @@ void Boid::updateVelocity(boidRefVec nearbyBoids, bool scatter)
     if (nearbyBoids.size() > 0)
     {
         // These are coefficients that has shown to work out well
-        double c1 = 1.0/20.0;
-        double c2 = 1.0/2.0;
+        double c1 = 1.0/10.0;
+        double c2 = 200.0;
         double c3 = 1.0/200.0;
         double c4 = 1.0/5.0;
 
@@ -127,6 +127,12 @@ Vector2 Boid::rule2(boidRefVec nearbyBoids)
         if ((boid.getPosition() - position).length() < 30)
             repellingForce -= boid.getPosition() - position;
 
+    if (repellingForce != Vector2(0, 0))
+    {
+        // unit vector * inverse length
+        // (makes the force stronger the closer the boids are to each other)
+        repellingForce = (repellingForce / repellingForce.length()) * (1.0 / repellingForce.length());
+    }
     return repellingForce;
 }
 
