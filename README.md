@@ -27,7 +27,7 @@ Controls
 --------
 
 * `a`: enable/disable rendering of velocity arrows/vectors of boids.
-* `s`: enable/dsiable scatter mode. In scatter mode the boids will scatter instead of flock.
+* `s`: enable/disable scatter mode. In scatter mode the boids will scatter instead of flock.
 * Left click: place a new boid
 * Right click: place a predator boid. Ordinary boids will flee from predators.
 * Mouse wheel/scrolling: zoom in/out, effectively increasing the space the boids can move in.
