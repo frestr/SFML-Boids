@@ -77,9 +77,7 @@ Vector2 Vector2::normalized()
     double len = length();
     if (len == 0)
         len = 1;
-    double normX = x / len;
-    double normY = y / len;
-    return Vector2(normX, normY);
+    return Vector2(x / len, y / len);
 }
 
 void Vector2::setX(double x)

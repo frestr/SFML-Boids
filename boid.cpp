@@ -33,7 +33,7 @@ void Boid::updateVelocity(boidRefVec nearbyBoids, bool scatter)
         // These are coefficients that has shown to work out well
         double c1 = 1.0/10.0;
         double c2 = 200.0;
-        double c3 = 1.0/200.0;
+        double c3 = 1.0/100.0;
         double c4 = 1.0/5.0;
 
         if (scatter)
