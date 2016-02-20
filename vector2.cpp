@@ -72,13 +72,14 @@ double Vector2::length()
     return sqrt(x*x + y*y);
 }
 
-void Vector2::normalize()
+Vector2 Vector2::normalized()
 {
     double len = length();
     if (len == 0)
         len = 1;
-    x /= len;
-    y /= len;
+    double normX = x / len;
+    double normY = y / len;
+    return Vector2(normX, normY);
 }
 
 void Vector2::setX(double x)

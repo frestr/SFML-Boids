@@ -23,7 +23,7 @@ public:
 
     double dot(Vector2 rightVec);
     double length();
-    void normalize();
+    Vector2 normalized();
 
     void setX(double x);
     double getX();

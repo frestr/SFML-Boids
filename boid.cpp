@@ -129,7 +129,7 @@ Vector2 Boid::rule2(boidRefVec nearbyBoids)
     {
         // unit vector * inverse length
         // (makes the force stronger the closer the boids are to each other)
-        repellingForce = (repellingForce / repellingForce.length()) * (1.0 / repellingForce.length());
+        repellingForce = repellingForce.normalized() * (1.0 / repellingForce.length());
     }
     return repellingForce;
 }
@@ -153,7 +153,7 @@ Vector2 Boid::fleeFromPredators(boidRefVec nearbyBoids)
     for (Boid& boid : nearbyBoids)
         if (boid.isPredator())
         {
-            fleeVelocity -= (boid.getPosition() - position);
+            fleeVelocity -= boid.getPosition() - position;
             ++predators;
         }
     if (predators == 0)
@@ -197,8 +197,7 @@ void Boid::updateVelocityArrow()
 
 double Boid::getPointingAngle()
 {
-    Vector2 normVel = velocity;
-    normVel.normalize();
+    Vector2 normVel = velocity.normalized();
 
     // SFML's rotate-function uses degrees going clockwise from 0 to <360
     double angle = atan2(normVel.getY(), normVel.getX());
