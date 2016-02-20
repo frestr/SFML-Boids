@@ -1,9 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include <map>
 #include "boidmanager.h"
 #include "inputhandler.h"
+#include "uimanager.h"
 
 int getBoidsNum(char* argv[])
 {
@@ -26,18 +26,12 @@ int main(int argc, char* argv[])
     sf::View view(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
     sf::View originalView = view;
 
-    sf::Font font;
-    if (!font.loadFromFile("DroidSans.ttf"))
-            return 0;
-
-    sf::Text fpsCounter;
-    fpsCounter.setFont(font);
-    fpsCounter.setPosition(10, 5);
     sf::Clock dtClock;
     sf::Clock fpsTimer;
 
     BoidManager boids(getBoidsNum(argv), view);
     InputHandler input;    
+    UIManager ui(window.getView());
 
     while (window.isOpen())
     {
@@ -60,18 +54,15 @@ int main(int argc, char* argv[])
         {
             fpsTimer.restart();
             int fps = (1.0 / dt > 60) ? 60 : (1.0 / dt);
-            fpsCounter.setString("fps: " + std::to_string(fps));
+            ui.setFps(fps);
         }
 
         boids.updatePositions(input, view);
+        ui.setBoidCount(boids.getBoidCount());
 
         window.clear(sf::Color(200, 200, 200));
         boids.drawBoids(window, input.isKeyActive(sf::Keyboard::A));
-
-        // Change view when drawing UI, to avoid the UI being scaled by zooming
-        window.setView(originalView);
-        window.draw(fpsCounter);
-        window.setView(view);
+        ui.drawUI(window);
 
         window.display();
     }

@@ -95,6 +95,11 @@ void BoidManager::drawBoids(sf::RenderWindow& window, bool drawArrows)
         boid.draw(window, drawArrows);
 }
 
+int BoidManager::getBoidCount()
+{
+    return boids.size();
+}
+
 void BoidManager::addBoid(int xPos, int yPos, bool predator)
 {
     Boid boid(xPos, yPos, predator);

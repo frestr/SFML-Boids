@@ -14,6 +14,7 @@ public:
 
     void updatePositions(InputHandler& input, sf::View windowView);
     void drawBoids(sf::RenderWindow& window, bool drawArrows = false);
+    int getBoidCount();
 
 private:
     void addBoid(int xPos, int yPos, bool predator=false);
