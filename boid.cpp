@@ -41,8 +41,6 @@ void Boid::updateVelocity(boidRefVec nearbyBoids, bool scatter)
             c1 *= -2; // Go away from center (instead of towards)
             c3 /= 2;  // Do not try to align velocity as eagerly
         }
-        if (predator)
-            c1 *= 3;
 
         Vector2 towardsCenter      = rule1(nearbyBoids) * c1;
         Vector2 repellingForce     = rule2(nearbyBoids) * c2;
