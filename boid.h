@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "vector2.h"
+#include "boidmanager.h"
 
 class Boid
 {
@@ -15,7 +16,7 @@ public:
     void updateVelocity(boidRefVec nearbyBoids, bool scatter=false);
     void updatePosition(double dt);
 
-    void draw(sf::RenderWindow& window, bool drawArrow = false);
+    void draw(sf::RenderWindow& window, bool drawArrow=false);
     void setBoundingBox(Vector2 min, Vector2 max);
 
     Vector2 getPosition();

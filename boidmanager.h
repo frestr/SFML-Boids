@@ -6,6 +6,8 @@
 #include "boid.h"
 #include "inputhandler.h"
 
+class Boid;
+
 class BoidManager
 {
 public:
