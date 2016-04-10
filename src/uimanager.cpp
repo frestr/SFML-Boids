@@ -3,7 +3,7 @@
 
 UIManager::UIManager(sf::View originalView)
 {
-    if (!font.loadFromFile("DroidSans.ttf"))
+    if (!font.loadFromFile("resources/DroidSans.ttf"))
     {
         std::cout << "In UIManager::UIManager(): Unable to load font DroidSans.ttf" << std::endl;
         return;
