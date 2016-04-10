@@ -19,7 +19,7 @@ Running
 
 To run the simulation, do
 ```
-./sfml-boids <boid bount>
+./sfml-boids <boid count>
 ```
 where boid count is the initial number of boids. If omitted, it will default to 40.
 
